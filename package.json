@@ -4,8 +4,12 @@
   "description": "\"Aulas de TypeScripts\"",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --project tsconfig.json && nodemon dist/Types.js"
   },
   "author": "\"Pedro Oliveira Sousa\"",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
 }

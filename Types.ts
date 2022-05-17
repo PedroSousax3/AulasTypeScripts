@@ -184,7 +184,7 @@ class Aluno implements PessoaFisica {
     }
 
     mostrar () {
-        alert(this.nome + "tem " + this.idade);
+        console.log(this.nome + "tem " + this.idade);
     }
 }
 
@@ -195,3 +195,10 @@ let iPessoa:PessoaFisica = {
 
 let aluno = new Aluno("Pedro O. Sousa", 19);
 aluno.mostrar();
+
+
+function instanciar<Type>(obj:Type): Type {
+    return obj;
+}
+
+console.log(instanciar("OK"));
