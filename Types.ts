@@ -20,6 +20,7 @@ enum Colors {
     black = '#000'
 }
 console.log(Colors.white);
+
 //any - qualquer coisa noImplicitAny
 let coisa:any = [ 0, 1, 2 ];
 
@@ -171,16 +172,18 @@ interface IPessoa {
 }
 
 interface PessoaFisica extends IPessoa {
-    
+    cpf:string;
 }
 
 class Aluno implements PessoaFisica {
     nome:string;
     idade:number;
+    cpf:string;
 
-    constructor(nome:string, idade:number) {
+    constructor(nome:string, idade:number, cpf:string) {
         this.nome = nome;
         this.idade = idade;
+        this.cpf = cpf;
     }
 
     mostrar () {
@@ -190,10 +193,11 @@ class Aluno implements PessoaFisica {
 
 let iPessoa:PessoaFisica = {
     nome: "Pedro",
-    idade: 19
+    idade: 19,
+    cpf: "123.456.789-10"
 }
 
-let aluno = new Aluno("Pedro O. Sousa", 19);
+let aluno = new Aluno("Pedro O. Sousa", 19, "517.520.308-85");
 aluno.mostrar();
 
 
@@ -202,3 +206,98 @@ function instanciar<Type>(obj:Type): Type {
 }
 
 console.log(instanciar("OK"));
+
+//Decoretors
+
+//@Component
+//@Selector
+//@useState("dasdas")
+
+//manipular e monitoria o que ele está monitorando
+//Decoretor é um fuinção que recebe alguns parametro de acordo com o que ele está anotando.
+
+//Class
+function log(target:any) {
+    console.log(target);
+}
+//Factory função que retorna um decoretor
+function Logger(prefix:string) {
+    return (target:any) => {
+        console.log(`${prefix} - ${target}`);
+    }
+}
+@log
+@Logger("teste")
+class Foo {
+    nome?:string;
+}
+
+function setApiVersion(apiVersion:string) {
+    return (myClass:any) => {
+        return class extends myClass {
+            version = apiVersion;
+        }
+    }
+}
+@setApiVersion("1.0.0")
+class Api {
+}
+
+console.log(new Api())
+//Propriedade
+function minLenght(length:number) {
+    return function (target:any, key:string) {
+        console.log(target, key);
+        let val = target[key];
+
+        const getter = () => val;
+        const setter = (value:string) => {
+            if (value.length <= length) {
+                console.log(`Erro, você não pode criar com menos de ${length} catacteres.`);
+            } else {
+                val = value;
+            }
+        }
+
+        Object.defineProperty(target, key, {
+            get: getter,
+            set: setter
+        })
+    }
+}
+
+class Movie {
+    @minLenght(10)
+    titulo:string;
+    constructor (titulo:string) {
+        this.titulo = titulo;
+    }
+}
+
+console.log(new Movie("Batman"));
+
+//Metodo
+//Roda sempre que o metodo é chamado
+
+function dalayEnvio(ms:number) {
+    //PropertyDescriptor descrição do metodo
+    return function (target:any, key:string, descriptor:PropertyDescriptor) {
+        console.log(target, key, descriptor);
+    }
+}
+class Menssagem {
+    msn:string;
+    constructor (msn:string) {
+        this.msn = msn;
+    }
+
+    @dalayEnvio(12)
+    enviar() {
+        console.log(this.msn);
+    }
+}
+
+new Menssagem("TESTE MENSAGEM").enviar();
+
+//Parametros
+//Acessor decoretor
